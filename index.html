@@ -4,40 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AgroTech Africa — Maquette</title>
-    <!-- On utilise Tailwind CSS pour un joli design sans effort -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 font-sans pb-12">
 
-    <!-- BARRE DE NAVIGATION -->
     <nav class="bg-green-600 text-white p-4 shadow-md mb-8">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold">🌍 AgroTech Africa</h1>
-            <span class="bg-green-700 px-3 py-1 rounded text-sm font-semibold">Mode Maquette</span>
+            <h1 class="text-xl font-bold"> AgroTech Africa</h1>
+            <span class="bg-green-700 px-3 py-1 rounded text-sm font-semibold">Maquette 100% Autonome</span>
         </div>
     </nav>
 
     <div class="container mx-auto px-4 max-w-4xl">
         
-        <!-- SECTION 1 : ESPACE AGRICULTEUR -->
         <section class="bg-white p-6 rounded-lg shadow-md mb-8">
-            <h2 class="text-2xl font-semibold text-green-700 mb-4">🚜 Espace Agriculteur : Publier une récolte</h2>
+            <h2 class="text-2xl font-semibold text-green-700 mb-4"> Espace Agriculter : Publier une récolte</h2>
             <form id="formProduit" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-gray-700 font-medium">Nom du produit</label>
-                    <input type="text" id="nom" placeholder="Ex: Manioc, Banane" class="w-full p-2 border rounded mt-1" required>
+                    <input type="text" id="nom" placeholder="Ex: Manioc, Banane, Tomate" class="w-full p-2 border rounded mt-1" required>
                 </div>
                 <div>
                     <label class="block text-gray-700 font-medium">Quantité disponible</label>
-                    <input type="text" id="quantite" placeholder="Ex: 500 kg, 10 sacs" class="w-full p-2 border rounded mt-1" required>
+                    <input type="text" id="quantite" placeholder="Ex: 500 kg, 12 paniers" class="w-full p-2 border rounded mt-1" required>
                 </div>
                 <div>
-                    <label class="block text-gray-700 font-medium">Prix (FCFA)</label>
+                    <label class="block text-gray-700 font-medium">Prix de vente</label>
                     <input type="text" id="prix" placeholder="Ex: 300 FCFA/kg" class="w-full p-2 border rounded mt-1" required>
                 </div>
                 <div>
                     <label class="block text-gray-700 font-medium">Localisation / Village</label>
-                    <input type="text" id="localite" placeholder="Ex: Dschang, Obala" class="w-full p-2 border rounded mt-1" required>
+                    <input type="text" id="localite" placeholder="Ex: Dschang, Obala, Bouaké" class="w-full p-2 border rounded mt-1" required>
                 </div>
                 <div class="md:col-span-2">
                     <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded transition shadow">
@@ -47,100 +44,89 @@
             </form>
         </section>
 
-        <!-- SECTION 2 : ESPACE ACHETEUR (LE MARCHÉ) -->
         <section class="bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-2xl font-semibold text-blue-700 mb-4">🛒 Le Marché : Produits disponibles</h2>
-            
-            <!-- Les produits vont s'afficher ici dynamiquement grâce au JavaScript -->
+            <h2 class="text-2xl font-semibold text-blue-700 mb-4"> Le Marché : Produits disponibles</h2>
             <div id="catalogue" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Chargement initial simulé -->
-                <p class="text-gray-500">Chargement des récoltes en cours...</p>
-            </div>
+                </div>
         </section>
     </div>
 
-    <!-- LOGIQUE JAVASCRIPT POUR CONNECTER LE BACKEND -->
     <script>
-        // Changer l'URL si votre backend est hébergé en ligne (ex: sur Render). Si c'est en local, laissez localhost
-        const API_URL = "http://localhost:3000/api";
+        // --- BASE DE DONNÉES SIMULÉE DIRECTEMENT ICI ---
+        let produits = [
+            { id: 1, nom: "Manioc frais", quantite: "500 kg", prix: "300 FCFA/kg", localite: "Dschang", image: "https://images.unsplash.com/photo-1590005354167-6da97870c913?auto=format&fit=crop&w=400&q=80" },
+            { id: 2, nom: "Tomates de saison", quantite: "12 paniers", prix: "5000 FCFA/panier", localite: "Obala", image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=400&q=80" }
+        ];
 
-        // 1. FONCTION POUR CHARGER LES PRODUITS DEPUIS LE BACKEND
-        async function chargerProduits() {
-            try {
-                const response = await fetch(`${API_URL}/produits`);
-                const produits = await response.json();
-                const catalogue = document.getElementById('catalogue');
-                catalogue.innerHTML = ''; // On vide le message de chargement
+        // 1. FONCTION POUR AFFICHER LES PRODUITS AU MARCHÉ
+        function afficherProduits() {
+            const catalogue = document.getElementById('catalogue');
+            catalogue.innerHTML = ''; 
 
-                produits.forEach(p => {
-                    catalogue.innerHTML += `
-                        <div class="border p-4 rounded-lg shadow-sm flex flex-col justify-between bg-gray-50">
-                            <div>
-                                <img src="${p.image}" alt="produit" class="w-full h-32 object-cover rounded mb-2">
-                                <h3 class="text-xl font-bold text-gray-800">${p.nom}</h3>
-                                <p class="text-gray-600">📍 <strong>Lieu :</strong> ${p.localite}</p>
-                                <p class="text-gray-600">📦 <strong>Quantité :</strong> ${p.quantite}</p>
-                                <p class="text-xl font-semibold text-green-600 mt-2">${p.prix}</p>
-                            </div>
-                            <button onclick="payerMobileMoney('${p.prix}')" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm py-2 px-4 rounded mt-4 font-bold transition">
-                                Acheter via Mobile Money
-                            </button>
+            produits.forEach(p => {
+                catalogue.innerHTML += `
+                    <div class="border p-4 rounded-lg shadow-sm flex flex-col justify-between bg-gray-50">
+                        <div>
+                            <img src="${p.image}" alt="produit" class="w-full h-40 object-cover rounded mb-2">
+                            <h3 class="text-xl font-bold text-gray-800">${p.nom}</h3>
+                            <p class="text-gray-600"> <strong>Lieu :</strong> ${p.localite}</p>
+                            <p class="text-gray-600"> <strong>Quantité :</strong> ${p.quantite}</p>
+                            <p class="text-xl font-semibold text-green-600 mt-2">${p.prix}</p>
                         </div>
-                    `;
-                });
-            } catch (error) {
-                console.error("Erreur de connexion au backend", error);
-                document.getElementById('catalogue').innerHTML = `<p class="text-red-500">Impossible de se connecter au backend. Lancez votre serveur node !</p>`;
-            }
+                        <button onclick="payerMobileMoney('${p.prix}', '${p.nom}')" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm py-2 px-4 rounded mt-4 font-bold transition">
+                            Acheter via Mobile Money
+                        </button>
+                    </div>
+                `;
+            });
         }
 
-        // 2. FONCTION POUR AJOUTER UN PRODUIT (FORMULAIRE AGRICULTEUR)
-        document.getElementById('formProduit').addEventListener('submit', async (e) => {
+        // 2. LOGIQUE DU FORMULAIRE AGRICULTEUR (AJOUT DE PRODUIT)
+        document.getElementById('formProduit').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            const nom = document.getElementById('nom').value;
+            const quantite = document.getElementById('quantite').value;
+            const prix = document.getElementById('prix').value;
+            const localite = document.getElementById('localite').value;
+
             const nouveauProduit = {
-                nom: document.getElementById('nom').value,
-                quantite: document.getElementById('quantite').value,
-                prix: document.getElementById('prix').value,
-                localite: document.getElementById('localite').value
+                id: produits.length + 1,
+                nom: nom,
+                quantite: quantite,
+                prix: prix,
+                localite: localite,
+                image: "https://images.unsplash.com/photo-1592417817098-8f3d6eb19675?auto=format&fit=crop&w=400&q=80" // Image par défaut légumes
             };
 
-            const response = await fetch(`${API_URL}/produits`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(nouveauProduit)
-            });
-
-            if(response.ok) {
-                alert("Récolte ajoutée au catalogue avec succès !");
-                document.getElementById('formProduit').reset();
-                chargerProduits(); // On recharge le marché pour voir le nouveau produit
-            }
+            // On ajoute le produit au début de la liste
+            produits.unshift(nouveauProduit);
+            
+            // On rafraîchit le marché visuellement
+            afficherProduits();
+            
+            // On vide le formulaire
+            document.getElementById('formProduit').reset();
+            alert("Succès ! Votre récolte a été publiée en temps réel sur le marché.");
         });
 
-        // 3. FONCTION POUR SIMULER LE PAIEMENT MOBILE MONEY
-        async function payerMobileMoney(montant) {
-            const telephone = prompt("Entrez votre numéro Mobile Money (Orange / MTN / Wave) pour payer :");
-            if (!telephone) return;
+        // 3. SIMULATION DU PAIEMENT MOBILE MONEY INTEGRÉ
+        function payerMobileMoney(prix, produit) {
+            const telephone = prompt(`Paiement de ${prix} pour : ${produit}.\nEntrez votre numéro Mobile Money (Orange Money, MTN, Wave...) :`);
+            
+            if (!telephone) return; // Si l'utilisateur annule
 
-            alert(`Demande d'autorisation USSD envoyée au ${telephone}... Veuillez patienter 1.5 seconde.`);
+            alert(` Demande d'autorisation USSD envoyée au ${telephone}...\nVeuillez patienter pendant la validation du réseau.`);
 
-            const response = await fetch(`${API_URL}/paiement`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ telephone, montant })
-            });
-
-            const resultat = await response.json();
-            if(response.ok) {
-                alert(`✅ Paiement Confirmé !\nID Transaction : ${resultat.transactionId}\n${resultat.message}`);
-            } else {
-                alert("❌ Échec du paiement.");
-            }
+            // Simulation du délai réseau (1,5 seconde)
+            setTimeout(() => {
+                const transactionId = "TX-" + Math.floor(Math.random() * 900000 + 100000);
+                alert(` TRANSACTION RÉUSSIE !\n\nID : ${transactionId}\nLe montant de ${prix} a été prélevé avec succès.\nL'agriculteur a reçu sa notification de paiement !`);
+            }, 1500);
         }
 
-        // Charger les produits au démarrage de la page
-        chargerProduits();
+        // Charger les produits de départ au chargement de la page
+        afficherProduits();
     </script>
 </body>
 </html>
